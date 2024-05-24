@@ -33,7 +33,7 @@ jobs:
             eval (ssh-agent -c)
             ssh-add ~/.ssh/paradox
             git switch ${{ steps.extract_branch.outputs.branch }}
-            git pull 
+            git pull
             # echo paradox | sudo -S docker compose -f compose.yaml down
             echo paradox | sudo -S docker compose -f prod.yaml up --build --remove-orphans -d
             echo "Deployed frontend successfully!"
