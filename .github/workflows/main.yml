@@ -30,7 +30,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd ~/budg-track/
-            eval (ssh-agent -c)
+            #eval (ssh-agent -c)
             ssh-add ~/.ssh/paradox
             git switch ${{ steps.extract_branch.outputs.branch }}
             git pull
