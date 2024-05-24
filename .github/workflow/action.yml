@@ -1,19 +1,38 @@
-name: actions_test
+name: Deploy to Production
 
-on: [push]
-
+on:
+  push:
+    branches:
+      - main
 jobs:
   deploy:
-
-
+    name: Deploy
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js
-      - uses: actions/setup-node@v4
+      - name: install node js
+        uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
-      - run: npm ci
-      - run: npm run build --if-present
-      - run: npm test
+          node-version: 18
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
+
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd universalml-web-
+            eval (ssh-agent -c)
+            ssh-add ~/.ssh/paradox
+            git switch ${{ steps.extract_branch.outputs.branch }}
+            git pull 
+            # echo paradox | sudo -S docker compose -f compose.yaml down
+            echo paradox | sudo -S docker compose -f prod.yaml up --build --remove-orphans -d
+            echo "Deployed frontend successfully!"
