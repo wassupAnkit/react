@@ -25,14 +25,10 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
-          #passphrase: ${{ secrets.PASSPHRASE }}
-          #password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
-            cd ~/budg-track/
-            ssh-add ~/.ssh/paradox
+            cd /home/ubuntu
             git switch ${{ steps.extract_branch.outputs.branch }}
             git pull
-            # echo paradox | sudo -S docker compose -f compose.yaml down
-            echo paradox | sudo -S docker compose -f prod.yaml up --build --remove-orphans -d
+            sudo -S docker compose up --build --remove-orphans -d
             echo "Deployed frontend successfully!"
