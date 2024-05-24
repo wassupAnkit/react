@@ -25,11 +25,11 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
-          passphrase: ${{ secrets.PASSPHRASE }}
-          password: ${{ secrets.PASSWORD }}
+          #passphrase: ${{ secrets.PASSPHRASE }}
+          #password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
-            cd /var/www/inout
+            cd ~/budg-track/
             eval (ssh-agent -c)
             ssh-add ~/.ssh/paradox
             git switch ${{ steps.extract_branch.outputs.branch }}
